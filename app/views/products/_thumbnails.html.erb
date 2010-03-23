@@ -1,0 +1,34 @@
+<% if !product.images.empty? %>
+<%= javascript_include_tag 'nf.lightbox.js' %>
+<%= stylesheet_link_tag 'nf.lightbox.css' %>
+<script type="text/javascript">
+$(function() {
+  $('#product-images a').lightBox();
+});
+</script>
+<div id="gallery">
+  <ul>
+    <% is_first = true
+    product.images.each do |i|
+	    if is_first
+	      is_first = false
+	  	  next
+      end -%>
+    <li><%= link_to_image(i.attachment, product.name) %></li>
+    <% end -%>
+  </ul>
+  <% if @product.has_variants? 
+    has_checked = false %>
+    <ul id="variant-thumbnails" class="thumbnails">
+      <% (@variants || product.variants).each do |v|
+          checked = !has_checked && (v.available?)
+     		  has_checked = true if checked
+          
+          v.images.each do |i| %>  
+              <li><%= link_to_image(i.attachment, product.name) %></li>
+          <% end %>
+        <% end %>
+      </ul>
+  <% end %>  
+</div>
+<% end %>
